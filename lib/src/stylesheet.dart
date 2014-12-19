@@ -7,16 +7,20 @@ library vcss.stylesheet;
 import 'builder.dart';
 
 abstract class StyleSheet {
-  Builder owner;
+  static int __nextId = 0;
 
-  Map<Symbol, dynamic> get vars => null;
-  List<StyleSheet> get require => null;
+  final int id = __nextId++;
+  Builder builder;
+
+  Map<Symbol, dynamic> get vars => const {};
+  List<StyleSheet> get require => const [];
+  List<String> get media => const [];
 
   build();
 
   $(Object key, [defaultValue]) {
-    assert(owner != null);
-    final val = owner.get(key);
+    assert(builder != null);
+    final val = builder.get(key);
     return val == null ? defaultValue : val;
   }
 }

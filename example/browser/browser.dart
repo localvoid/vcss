@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:vcss/vcss.dart' as css;
+import 'package:vcss/browser.dart' as css;
 
 class OneCss extends css.StyleSheet {
   static final instance = new OneCss();
@@ -32,9 +32,9 @@ class ExampleCss extends css.StyleSheet {
   final require = [OneCss.instance, TwoCss.instance];
 
   build() =>
-      css.rule(['.test', '.test2'])([
-        {css.background: '#333'},
-        borderMixin('#000'),
+      css.rule(['#text'])([
+        {css.background: $(#twoColor)},
+        borderMixin($(#oneColor)),
 
         css.rule('&.sub')({
           css.top: '10px'
@@ -48,7 +48,9 @@ class ExampleCss extends css.StyleSheet {
 }
 
 main() {
-  final builder = new css.Builder(vars: {#oneColor: '#555'});
-  builder.include(ExampleCss.instance);
-  print(builder.compilePending());
+  final b = new css.Builder(vars: {
+    #oneColor: '#5ff'
+  });
+  final m = new css.StyleSheetManager(b);
+  m.include(ExampleCss.instance);
 }

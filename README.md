@@ -3,7 +3,7 @@
 ## Usage
 
 ```dart
-import 'package:vcss/vcss.dart' as css;
+import 'package:vcss/browser.dart' as css;
 
 class OneCss extends css.StyleSheet {
   static final instance = new OneCss();
@@ -33,9 +33,9 @@ class ExampleCss extends css.StyleSheet {
   final require = [OneCss.instance, TwoCss.instance];
 
   build() =>
-      css.rule(['.test', '.test2'])([
-        {css.background: '#333'},
-        borderMixin('#000'),
+      css.rule(['#text'])([
+        {css.background: $(#twoColor)},
+        borderMixin($(#oneColor)),
 
         css.rule('&.sub')({
           css.top: '10px'
@@ -49,22 +49,10 @@ class ExampleCss extends css.StyleSheet {
 }
 
 main() {
-  final builder = new css.Builder(vars: {#oneColor: '#555'});
-  builder.include(ExampleCss.instance);
-  print(builder.compilePending());
+  final b = new css.Builder(vars: {
+    #oneColor: '#5ff'
+  });
+  final m = new css.StyleSheetManager(b);
+  m.include(ExampleCss.instance);
 }
-/*
-.one {
-  color: #555;
-}
-
-.two {
-  color: #999;
-}
-
-.test, .test2 {
-  background: #333;
-  border: 1px solid #000;
-}
-*/
 ```

@@ -10,60 +10,37 @@ import 'rule.dart';
 import 'stylesheet.dart';
 
 class Builder {
-  HashMap<Symbol, dynamic> vars = new HashMap<Symbol, dynamic>();
+  Map<Symbol, dynamic> vars;
 
   List<StyleSheet> _pending = [];
 
-  Builder({this.vars});
+  Builder({Map<Symbol, dynamic> vars})
+      : vars = vars == null ? new HashMap<Symbol, dynamic>() : vars;
 
   get(Symbol key) => vars[key];
 
-  void include(StyleSheet styleSheet) {
-    if (styleSheet.owner == null) {
-      styleSheet.owner = this;
-      final require = styleSheet.require;
-      if (require != null) {
-        for (final s in require) {
-          include(s);
-        }
-      }
-      final newVars = styleSheet.vars;
-      if (newVars != null) {
-        newVars.forEach((k, v) {
-          vars.putIfAbsent(k, () => v);
-        });
-      }
-      _pending.add(styleSheet);
-    }
-  }
+  List<String> compile(StyleSheet styleSheet) {
+    final List<String> result = [];
 
-  String compilePending() {
-    final StringBuffer out = new StringBuffer();
+    styleSheet.vars.forEach((k, v) {
+      vars.putIfAbsent(k, () => v);
+    });
 
-    for (final s in _pending) {
-      out.write(compile(s));
-    }
-
-    return out.toString();
-  }
-
-  String compile(StyleSheet styleSheet) {
-    final StringBuffer out = new StringBuffer();
-
+    styleSheet.builder = this;
     final rules = styleSheet.build();
     if (rules is List) {
       for (final rule in rules) {
-        out.write(compileRule(rule));
+        result.addAll(compileRule(rule));
       }
     } else {
-      out.write(compileRule(rules));
+      result.addAll(compileRule(rules));
     }
 
-    return out.toString();
+    return result;
   }
 
-  String compileRule(Rule rule, [List parentSelectors = const []]) {
-    final StringBuffer out = new StringBuffer();
+  List<String> compileRule(Rule rule, [List parentSelectors = const []]) {
+    final List<String> result = [];
 
     List<String> selectors;
     if (parentSelectors.isEmpty) {
@@ -76,22 +53,24 @@ class Builder {
       }
     }
 
+    final StringBuffer out = new StringBuffer();
     if (rule.properties != null) {
       out.write(selectors.join(', '));
-      out.write(' {\n');
+      out.write('{\n');
       rule.properties.forEach((k, v) {
         out.write('  ${constants.propertyNames[k]}: $v;\n');
       });
-      out.write('}\n\n');
+      out.write('}');
     }
+    result.add(out.toString());
 
     if (rule.children != null) {
       for (final c in rule.children) {
-        compileRule(c, selectors);
+        result.addAll(compileRule(c, selectors));
       }
     }
 
-    return out.toString();
+    return result;
   }
 }
 
