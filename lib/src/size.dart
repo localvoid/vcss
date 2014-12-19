@@ -4,7 +4,9 @@
 
 library vcss.size;
 
-class Size {
+import 'value.dart';
+
+class Size implements Value {
   final String type;
   final num value;
 
@@ -68,4 +70,6 @@ class Size {
 
   bool operator ==(Size other) =>
       value == other.value && type == other.type;
+
+  String toCssValue() => '$value$type';
 }
