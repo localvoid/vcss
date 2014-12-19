@@ -5,5 +5,10 @@
 /// The VCSS library.
 library vcss;
 
-export 'package:vcss/src/constants.dart';
-export 'package:vcss/src/vcss_base.dart';
+export 'src/constants.dart';
+export 'src/value.dart';
+export 'src/size.dart';
+export 'src/color.dart';
+export 'src/rule.dart';
+export 'src/stylesheet.dart';
+export 'src/builder.dart';
