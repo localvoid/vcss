@@ -4,29 +4,15 @@
 
 library vcss.builder;
 
-import 'dart:collection';
-import 'constants.dart' as constants;
 import 'rule.dart';
 import 'stylesheet.dart';
 
 class Builder {
-  Map<Symbol, dynamic> vars;
-
-  List<StyleSheet> _pending = [];
-
-  Builder({Map<Symbol, dynamic> vars})
-      : vars = vars == null ? new HashMap<Symbol, dynamic>() : vars;
-
-  get(Symbol key) => vars[key];
+  const Builder();
 
   List<String> compile(StyleSheet styleSheet) {
     final List<String> result = [];
 
-    styleSheet.vars.forEach((k, v) {
-      vars.putIfAbsent(k, () => v);
-    });
-
-    styleSheet.builder = this;
     final rules = styleSheet.build();
     if (rules is List) {
       for (final rule in rules) {
@@ -56,11 +42,9 @@ class Builder {
     final StringBuffer out = new StringBuffer();
     if (rule.properties != null) {
       out.write(selectors.join(', '));
-      out.write('{\n');
-      rule.properties.forEach((k, v) {
-        out.write('  ${constants.propertyNames[k]}: $v;\n');
-      });
-      out.write('}');
+      out.write(' {\n');
+      out.write(rule.properties.join(';\n'));
+      out.write('\n}');
     }
     result.add(out.toString());
 

@@ -5,8 +5,7 @@
 /// The VCSS library.
 library vcss;
 
-export 'src/constants.dart';
-export 'src/value.dart';
+export 'src/property.dart';
 export 'src/size.dart';
 export 'src/color.dart';
 export 'src/rule.dart';

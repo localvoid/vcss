@@ -4,9 +4,7 @@
 
 library vcss.size;
 
-import 'value.dart';
-
-class Size implements Value {
+class Size {
   final String type;
   final num value;
 
@@ -71,5 +69,5 @@ class Size implements Value {
   bool operator ==(Size other) =>
       value == other.value && type == other.type;
 
-  String toCssValue() => '$value$type';
+  String toString() => '$value$type';
 }

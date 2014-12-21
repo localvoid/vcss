@@ -4,9 +4,7 @@
 
 library vcss.color;
 
-import 'value.dart';
-
-abstract class Color implements Value {
+abstract class Color {
   const Color();
 }
 
@@ -15,7 +13,7 @@ class HexColor extends Color {
 
   const HexColor(this.value);
 
-  String toCssValue() => value;
+  String toString() => value;
 }
 
 class RgbColor extends Color {
@@ -24,9 +22,9 @@ class RgbColor extends Color {
   final num b;
   final num a;
 
-  const RgbColor(this.r, this.g, this.b, [this.a = 0]);
+  const RgbColor(this.r, this.g, this.b, [this.a = 1]);
 
-  String toCssValue() => a == 0 ? 'rgb($r, $g, $b)' : 'rgba($r, $g, $b, $a)';
+  String toString() => a == 1 ? 'rgb($r, $g, $b)' : 'rgba($r, $g, $b, $a)';
 }
 
 class HslColor extends Color {
@@ -35,7 +33,7 @@ class HslColor extends Color {
   final num l;
   final num a;
 
-  const HslColor(this.h, this.s, this.l, [this.a = 0]);
+  const HslColor(this.h, this.s, this.l, [this.a = 1]);
 
-  String toCssValue() => a == 0 ? 'hsl($h, $s, $l)' : 'hsla($h, $s, $l, $a)';
+  String toString() => a == 1 ? 'hsl($h, $s, $l)' : 'hsla($h, $s, $l, $a)';
 }

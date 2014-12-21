@@ -17,13 +17,8 @@ class StyleSheetElement {
   int _index = 0;
 
   StyleSheetElement(this.styleSheet, List<String> rules) {
-    element.append(new html.Text(''));
-    html.document.head.append(element);
-    final sheet = element.sheet;
-    for (final rule in rules) {
-      sheet.insertRule(rule, _index++);
-    }
     _collectDependencies(styleSheet);
+    element.append(new html.Text(rules.join('\n')));
   }
 
   void _collectDependencies(StyleSheet s) {
@@ -36,6 +31,10 @@ class StyleSheetElement {
   void enable() {
     if (disabled) {
       disabled = false;
+      assert(() {
+        element.setAttribute('disabled', '');
+        return true;
+      });
       element.disabled = false;
     }
   }
@@ -43,6 +42,10 @@ class StyleSheetElement {
   void disable() {
     if (!disabled) {
       disabled = true;
+      assert(() {
+        element.setAttribute('disabled', 'true');
+        return true;
+      });
       element.disabled = true;
     }
   }
@@ -53,22 +56,30 @@ class StyleSheetManager {
   final HashMap<int, StyleSheetElement> styleSheets =
       new HashMap<int, StyleSheetElement>();
 
-  StyleSheetManager([Builder builder])
-      : builder = builder == null ? new Builder() : builder;
+  StyleSheetManager([this.builder = const Builder()]);
 
-  void include(StyleSheet s, [bool disableUnused = true]) {
-    final StyleSheetElement e = styleSheets.putIfAbsent(s.id, () {
-      for (final r in s.require) {
-        include(r);
-      }
-      return new StyleSheetElement(s, builder.compile(s));
-    });
+  void _include(List<StyleSheet> styles) {
+    for (final s in styles) {
+      final StyleSheetElement e = styleSheets.putIfAbsent(s.id, () {
+        _include(s.require);
+        final ret = new StyleSheetElement(s, builder.compile(s));
+        html.document.head.append(ret.element);
+        return ret;
+      });
+    }
+  }
+
+  void include(List<StyleSheet> styles, [bool disableUnused = true]) {
+    _include(styles);
+
+    final List<StyleSheetElement> elements = styles.map((s) => styleSheets[s.id]).toList();
 
     styleSheets.forEach((k, v) {
-      if (e.required.contains(k)) {
-        v.enable();
-      } else {
+      final e = elements.firstWhere((e) => e.required.contains(k), orElse: () => null);
+      if (e == null) {
         v.disable();
+      } else {
+        v.enable();
       }
     });
   }

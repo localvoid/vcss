@@ -126,6 +126,15 @@ const int widows               = 118;
 const int width                = 119;
 const int wordSpacing          = 120;
 const int zIndex               = 121;
+const int transition           = 122;
+const int boxShadow            = 123;
+const int borderRadius         = 124;
+const int transitionProperty   = 125;
+const int transform            = 126;
+const int opacity              = 127;
+const int boxSizing            = 128;
+const int userSelect           = 129;
+const int flex                 = 130;
 
 const Map<int, String> propertyNames = const {
   azimuth: 'azimuth',
@@ -249,5 +258,14 @@ const Map<int, String> propertyNames = const {
   widows: 'widows',
   width: 'width',
   wordSpacing: 'word-spacing',
-  zIndex: 'z-index'
+  zIndex: 'z-index',
+  transition: 'transition',
+  boxShadow: 'box-shadow',
+  borderRadius: 'border-radius',
+  transitionProperty: 'transition-property',
+  transform: 'transform',
+  opacity: 'opacity',
+  boxSizing: 'box-sizing',
+  userSelect: '-webkit-user-select',
+  flex: 'flex'
 };

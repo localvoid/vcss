@@ -4,10 +4,29 @@
 
 library vcss.rule;
 
-Rule rule(selectors,
-          {Map<int, String> properties,
-           List<Rule> children}) {
+import 'property.dart';
+
+void _includeProperties(Iterable v, List properties, List children) {
+  for (final i in v) {
+    if (i is String || i is Property) {
+      properties.add(i);
+    } else if (i is Iterable) {
+      _includeProperties(i, properties, children);
+    } else {
+      assert(i is Rule);
+      children.add(i);
+    }
+  }
+}
+
+Rule rule(selectors, Iterable v) {
   selectors = selectors is String ? [selectors] : selectors;
+
+  final properties = [];
+  final children = [];
+
+  _includeProperties(v, properties, children);
+
   return new Rule(selectors,
       properties: properties,
       children: children);
@@ -15,31 +34,8 @@ Rule rule(selectors,
 
 class Rule {
   List<String> selectors;
-  Map<int, String> properties;
+  List<String> properties;
   List<Rule> children;
 
   Rule(this.selectors, {this.properties, this.children});
-
-  Rule call(v) {
-    assert(v is List || v is Map<int, String>);
-    if (v is Map<int, String>) {
-      properties = v;
-    } else {
-      for (final i in v) {
-        assert(i is Map<int, String> || i is Rule);
-        if (i is Map<int, String>) {
-          if (properties == null) {
-            properties = {};
-          }
-          properties.addAll(i);
-        } else {
-          if (children == null) {
-            children = [];
-          }
-          children.add(i);
-        }
-      }
-    }
-    return this;
-  }
 }
