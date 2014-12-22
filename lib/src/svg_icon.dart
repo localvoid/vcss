@@ -4,22 +4,25 @@
 
 library vcss.svg_icon;
 
+import 'dart:svg' as svg;
+import 'svg.dart';
+
 class SvgIcon {
-  final SvgIconSet set;
-  final String iconId;
-  final String path;
-
-  String get id => '${set.id}:$iconId';
-
-  const SvgIcon(this.set, this.iconId, this.path);
-
-  String toSvgGroup() => '<g id="$iconId"><path d="$path"/></g>';
-
-}
-
-class SvgIconSet {
   final String id;
-  final int size;
+  final String viewBox;
+  final List<SvgShape> shapes;
 
-  const SvgIconSet(this.id, this.size);
+  const SvgIcon(this.id, this.viewBox, this.shapes);
+
+  svg.GElement render() {
+    final sym = new svg.GElement()
+      ..id = id;
+      //..setAttribute('viewBox', viewBox);
+
+    for (final shape in shapes) {
+      sym.append(shape.render());
+    }
+
+    return sym;
+  }
 }

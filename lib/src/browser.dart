@@ -5,7 +5,9 @@
 library vcss.browser;
 
 import 'dart:collection';
+import 'dart:svg' as svg;
 import 'dart:html' as html;
+import 'svg_icon.dart';
 import 'stylesheet.dart';
 import 'builder.dart';
 
@@ -51,17 +53,43 @@ class StyleSheetElement {
   }
 }
 
+class IconSetElement {
+  final element = new svg.SvgSvgElement();
+  final defs = new svg.DefsElement();
+  final HashMap<String, SvgIcon> icons = new HashMap<String, SvgIcon>();
+
+  IconSetElement() {
+    element.append(defs);
+  }
+
+  void add(SvgIcon icon) {
+    icons.putIfAbsent(icon.id, () {
+      defs.append(icon.render());
+      return icon;
+    });
+  }
+}
+
 class StyleSheetManager {
   final Builder builder;
+  final IconSetElement iconSet = new IconSetElement();
   final HashMap<int, StyleSheetElement> styleSheets =
       new HashMap<int, StyleSheetElement>();
 
-  StyleSheetManager([this.builder = const Builder()]);
+  StyleSheetManager([this.builder = const Builder()]) {
+    html.document.head.append(iconSet.element);
+  }
 
   void _include(List<StyleSheet> styles) {
     for (final s in styles) {
       final StyleSheetElement e = styleSheets.putIfAbsent(s.id, () {
         _include(s.require);
+
+        print(s);
+        for (final icon in s.icons) {
+          iconSet.add(icon);
+        }
+
         final ret = new StyleSheetElement(s, builder.compile(s));
         html.document.head.append(ret.element);
         return ret;

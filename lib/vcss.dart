@@ -11,3 +11,6 @@ export 'src/color.dart';
 export 'src/rule.dart';
 export 'src/stylesheet.dart';
 export 'src/builder.dart';
+export 'src/svg_icon.dart';
+
+export 'src/svg.dart';

@@ -4,12 +4,15 @@
 
 library vcss.stylesheet;
 
+import 'svg_icon.dart';
+
 abstract class StyleSheet {
   static int __nextId = 0;
 
   final int id = __nextId++;
 
   List<StyleSheet> get require => const [];
+  List<SvgIcon> get icons => const [];
   List<String> get media => const [];
 
   build();
