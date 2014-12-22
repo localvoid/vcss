@@ -85,7 +85,6 @@ class StyleSheetManager {
       final StyleSheetElement e = styleSheets.putIfAbsent(s.id, () {
         _include(s.require);
 
-        print(s);
         for (final icon in s.icons) {
           iconSet.add(icon);
         }
