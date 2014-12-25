@@ -4,11 +4,15 @@
 
 library vcss.property;
 
+import 'rule.dart';
 import 'builder.dart';
 
 abstract class Property {
   String toCssProperty(Builder builder);
 }
+
+const notSelectable = 'user-select: none';
+
 
 azimuth(value) => 'azimuth: $value';
 background(value) => 'background: $value';
@@ -141,4 +145,10 @@ opacity(value) => 'opacity: $value';
 boxSizing(value) => 'box-sizing: $value';
 userSelect(value) => '-webkit-user-select: $value';
 flex(value) => 'flex: $value';
+fill(value) => 'fill: $value';
+alignItems(value) => 'align-items: $value';
 
+inputPlaceholder(value) => [
+    rule('&:-ms-input-placeholder', [color(value)]),
+    rule('&:-webkit-input-placeholder', [color(value)])
+  ];
