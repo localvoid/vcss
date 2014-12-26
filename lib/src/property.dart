@@ -147,6 +147,8 @@ userSelect(value) => '-webkit-user-select: $value';
 flex(value) => 'flex: $value';
 fill(value) => 'fill: $value';
 alignItems(value) => 'align-items: $value';
+touchAction(value) => 'touch-action: $value';
+justifyContent(value) => 'justify-content: $value';
 
 inputPlaceholder(value) => [
     rule('&:-ms-input-placeholder', [color(value)]),
