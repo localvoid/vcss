@@ -149,6 +149,8 @@ fill(value) => 'fill: $value';
 alignItems(value) => 'align-items: $value';
 touchAction(value) => 'touch-action: $value';
 justifyContent(value) => 'justify-content: $value';
+pointerEvents(value) => 'pointer-events: $value';
+willChange(value) => 'will-change: $value';
 
 inputPlaceholder(value) => [
     rule('&:-ms-input-placeholder', [color(value)]),

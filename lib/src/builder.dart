@@ -10,7 +10,7 @@ import 'stylesheet.dart';
 class Builder {
   const Builder();
 
-  List<String> compile(StyleSheet styleSheet) {
+  String compile(StyleSheet styleSheet) {
     final List<String> result = [];
 
     final rules = styleSheet.build();
@@ -22,10 +22,41 @@ class Builder {
       result.addAll(compileRule(rules));
     }
 
-    return result;
+    return result.join('\n');
   }
 
-  List<String> compileRule(Rule rule, [List parentSelectors = const []]) {
+  List<String> compileRule(Rule rule) {
+    if (rule is SelectorRule) {
+      return compileSelectorRule(rule);
+    } else if (rule is MediaRule) {
+      return compileMediaRule(rule);
+    }
+    return compileKeyframesRule(rule);
+  }
+
+  List<String> compileMediaRule(MediaRule rule) {
+    final selectors = rule.children.expand((c) => compileSelectorRule(c));
+
+    final StringBuffer out = new StringBuffer();
+    out.write('@media ${rule.conditions} {\n');
+    out.write(selectors.join('\n'));
+    out.write('}\n');
+
+    return [out.toString()];
+  }
+
+  List<String> compileKeyframesRule(KeyframesRule rule) {
+    final selectors = rule.children.expand((c) => compileSelectorRule(c)).join('\n');
+
+    final StringBuffer out = new StringBuffer();
+
+    out.write('@-webkit-keyframes ${rule.identifier} {\n$selectors}\n');
+    out.write('@keyframes ${rule.identifier} {\n$selectors}\n');
+
+    return [out.toString()];
+  }
+
+  List<String> compileSelectorRule(SelectorRule rule, [List parentSelectors = const []]) {
     final List<String> result = [];
 
     List<String> selectors;
@@ -50,7 +81,7 @@ class Builder {
 
     if (rule.children != null) {
       for (final c in rule.children) {
-        result.addAll(compileRule(c, selectors));
+        result.addAll(compileSelectorRule(c, selectors));
       }
     }
 

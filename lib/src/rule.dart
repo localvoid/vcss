@@ -6,6 +6,34 @@ library vcss.rule;
 
 import 'property.dart';
 
+abstract class Rule<T extends Rule> {
+  List<T> children;
+
+  Rule(this.children);
+}
+
+class SelectorRule extends Rule<SelectorRule> {
+  List<String> selectors;
+  List<String> properties;
+
+  SelectorRule(this.selectors, {this.properties, List<SelectorRule> children})
+      : super(children);
+}
+
+class MediaRule extends Rule<SelectorRule> {
+  String conditions;
+
+  MediaRule(this.conditions, {List<SelectorRule> children})
+      : super(children);
+}
+
+class KeyframesRule extends Rule<SelectorRule> {
+  String identifier;
+
+  KeyframesRule(this.identifier, {List<SelectorRule> children})
+      : super(children);
+}
+
 void _includeProperties(Iterable v, List properties, List children) {
   for (final i in v) {
     if (i is String || i is Property) {
@@ -19,7 +47,7 @@ void _includeProperties(Iterable v, List properties, List children) {
   }
 }
 
-Rule rule(selectors, Iterable v) {
+SelectorRule rule(selectors, Iterable v) {
   selectors = selectors is String ? [selectors] : selectors;
 
   final properties = [];
@@ -27,15 +55,15 @@ Rule rule(selectors, Iterable v) {
 
   _includeProperties(v, properties, children);
 
-  return new Rule(selectors,
+  return new SelectorRule(selectors,
       properties: properties,
       children: children);
 }
 
-class Rule {
-  List<String> selectors;
-  List<String> properties;
-  List<Rule> children;
+MediaRule media(String condition, Iterable v) {
+  return new MediaRule(condition, children: v.toList());
+}
 
-  Rule(this.selectors, {this.properties, this.children});
+KeyframesRule keyframes(String identifier, Iterable v) {
+  return new KeyframesRule(identifier, children: v.toList());
 }

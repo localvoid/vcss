@@ -18,9 +18,9 @@ class StyleSheetElement {
   bool disabled = false;
   int _index = 0;
 
-  StyleSheetElement(this.styleSheet, List<String> rules) {
+  StyleSheetElement(this.styleSheet, String rules) {
     _collectDependencies(styleSheet);
-    element.append(new html.Text(rules.join('\n')));
+    element.append(new html.Text(rules));
   }
 
   void _collectDependencies(StyleSheet s) {

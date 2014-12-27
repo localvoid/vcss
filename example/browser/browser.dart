@@ -58,6 +58,15 @@ class ExampleCss extends css.StyleSheet {
           css.bottom('20px'),
           css.background('#999')
         ])
+      ]),
+
+      css.keyframes('anim', [
+        css.rule('0%', [
+          css.bottom('20px'),
+        ]),
+        css.rule('100%', [
+          css.bottom('40px'),
+        ])
       ])
     ];
 }
