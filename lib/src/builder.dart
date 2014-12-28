@@ -40,7 +40,7 @@ class Builder {
     final StringBuffer out = new StringBuffer();
     out.write('@media ${rule.conditions} {\n');
     out.write(selectors.join('\n'));
-    out.write('}\n');
+    out.write('\n}\n');
 
     return [out.toString()];
   }
@@ -50,8 +50,8 @@ class Builder {
 
     final StringBuffer out = new StringBuffer();
 
-    out.write('@-webkit-keyframes ${rule.identifier} {\n$selectors}\n');
-    out.write('@keyframes ${rule.identifier} {\n$selectors}\n');
+    out.write('@-webkit-keyframes ${rule.identifier} {\n$selectors\n}\n');
+    out.write('@keyframes ${rule.identifier} {\n$selectors\n}\n');
 
     return [out.toString()];
   }
@@ -74,7 +74,10 @@ class Builder {
     if (rule.properties != null) {
       out.write(selectors.join(', '));
       out.write(' {\n');
-      out.write(rule.properties.join(';\n'));
+      for (final p in rule.properties) {
+        out.write(p);
+        out.write(';\n');
+      }
       out.write('\n}');
     }
     result.add(out.toString());

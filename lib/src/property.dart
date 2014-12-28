@@ -156,3 +156,8 @@ inputPlaceholder(value) => [
     rule('&:-ms-input-placeholder', [color(value)]),
     rule('&:-webkit-input-placeholder', [color(value)])
   ];
+
+animation(value) => [
+    '-webkit-animation: $value',
+    'animation: $value'
+  ];
