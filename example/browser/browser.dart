@@ -17,11 +17,13 @@ const xSize = const css.Size.px(10);
 borderMixin(color) => [css.border('1px solid $color')];
 
 class OneCss extends css.StyleSheet {
-  static final instance = new OneCss();
+  const OneCss();
 
-  final icons = [addIcon];
+  static const instance = const OneCss();
 
-  build() => [
+  final icons = const [addIcon];
+
+  build(_) => [
       css.rule('.one', [
         css.color(oneColor)
       ])
@@ -29,11 +31,13 @@ class OneCss extends css.StyleSheet {
 }
 
 class TwoCss extends css.StyleSheet {
-  static final instance = new TwoCss();
+  const TwoCss();
 
-  final icons = [removeIcon];
+  static const instance = const TwoCss();
 
-  build() => [
+  final icons = const [removeIcon];
+
+  build(_) => [
       css.rule('.two', [
         css.color(twoColor)
       ])
@@ -41,11 +45,13 @@ class TwoCss extends css.StyleSheet {
 }
 
 class ExampleCss extends css.StyleSheet {
-  static final instance = new ExampleCss();
+  const ExampleCss();
 
-  final require = [OneCss.instance, TwoCss.instance];
+  static const instance = const ExampleCss();
 
-  build() => [
+  final require = const [OneCss.instance, TwoCss.instance];
+
+  build(_) => [
       css.rule(['#text'], [
         css.background(twoColor),
         borderMixin(oneColor),

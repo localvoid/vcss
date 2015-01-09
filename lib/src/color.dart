@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library vcss.color;
+library vcss.src.color;
 
 abstract class Color {
   const Color();
@@ -23,6 +23,11 @@ class RgbColor extends Color {
   final num a;
 
   const RgbColor(this.r, this.g, this.b, [this.a = 1]);
+
+  double get luminance => (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  bool get isLight => 1 - luminance < 0.5;
+  bool get isDark => !isLight;
 
   String toString() => a == 1 ? 'rgb($r, $g, $b)' : 'rgba($r, $g, $b, $a)';
 }

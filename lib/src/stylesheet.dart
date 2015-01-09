@@ -2,18 +2,17 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library vcss.stylesheet;
+library vcss.src.stylesheet;
 
-import 'svg_icon.dart';
+import 'builder.dart';
+import 'svg/icon.dart';
 
 abstract class StyleSheet {
-  static int __nextId = 0;
-
-  final int id = __nextId++;
+  const StyleSheet();
 
   List<StyleSheet> get require => const [];
   List<SvgIcon> get icons => const [];
   List<String> get media => const [];
 
-  build();
+  List build(Builder builder);
 }

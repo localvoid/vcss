@@ -2,10 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library vcss.svg_icon;
+library vcss.src.svg.icon;
 
 import 'dart:svg' as svg;
-import 'svg.dart';
+import '../svg.dart';
 
 class SvgIcon {
   final String id;
@@ -17,7 +17,6 @@ class SvgIcon {
   svg.GElement render() {
     final sym = new svg.GElement()
       ..id = id;
-      //..setAttribute('viewBox', viewBox);
 
     for (final shape in shapes) {
       sym.append(shape.render());

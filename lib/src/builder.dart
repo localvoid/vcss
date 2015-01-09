@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library vcss.builder;
+library vcss.src.builder;
 
 import 'rule.dart';
 import 'stylesheet.dart';
@@ -13,13 +13,13 @@ class Builder {
   String compile(StyleSheet styleSheet) {
     final List<String> result = [];
 
-    final rules = styleSheet.build();
+    final rules = styleSheet.build(this);
     if (rules is List) {
       for (final rule in rules) {
         result.addAll(compileRule(rule));
       }
     } else {
-      result.addAll(compileRule(rules));
+      result.addAll(compileRule(rules as Rule));
     }
 
     return result.join('\n');

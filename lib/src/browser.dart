@@ -7,16 +7,18 @@ library vcss.src.browser;
 import 'dart:collection';
 import 'dart:svg' as svg;
 import 'dart:html' as html;
-import 'svg_icon.dart';
+import 'svg/icon.dart';
 import 'stylesheet.dart';
 import 'builder.dart';
 
 class StyleSheetElement {
   final StyleSheet styleSheet;
+
   final html.StyleElement element = new html.StyleElement();
-  final HashSet<int> required = new HashSet<int>();
-  bool disabled = false;
-  int _index = 0;
+  final HashSet<StyleSheet> required = new HashSet<StyleSheet>();
+
+  bool get disabled => element.disabled;
+  set disabled(bool v) { element.disabled = v; }
 
   StyleSheetElement(this.styleSheet, String rules) {
     _collectDependencies(styleSheet);
@@ -27,30 +29,11 @@ class StyleSheetElement {
     for (final d in s.require) {
       _collectDependencies(d);
     }
-    required.add(s.id);
+    required.add(s);
   }
 
-  void enable() {
-    if (disabled) {
-      disabled = false;
-      assert(() {
-        element.setAttribute('disabled', '');
-        return true;
-      });
-      element.disabled = false;
-    }
-  }
-
-  void disable() {
-    if (!disabled) {
-      disabled = true;
-      assert(() {
-        element.setAttribute('disabled', 'true');
-        return true;
-      });
-      element.disabled = true;
-    }
-  }
+  void enable() { disabled = false; }
+  void disable() { disabled = true; }
 }
 
 class IconSetElement {
@@ -73,8 +56,10 @@ class IconSetElement {
 class StyleSheetManager {
   final Builder builder;
   final IconSetElement iconSet = new IconSetElement();
-  final HashMap<int, StyleSheetElement> styleSheets =
-      new HashMap<int, StyleSheetElement>();
+
+  // mapping between stylesheet objects and stylesheet html elemenets
+  final HashMap<StyleSheet, StyleSheetElement> styleSheets =
+      new HashMap<StyleSheet, StyleSheetElement>();
 
   StyleSheetManager([this.builder = const Builder()]) {
     html.document.head.append(iconSet.element);
@@ -82,7 +67,7 @@ class StyleSheetManager {
 
   void _include(List<StyleSheet> styles) {
     for (final s in styles) {
-      final StyleSheetElement e = styleSheets.putIfAbsent(s.id, () {
+      final StyleSheetElement e = styleSheets.putIfAbsent(s, () {
         _include(s.require);
 
         for (final icon in s.icons) {
@@ -99,7 +84,7 @@ class StyleSheetManager {
   void include(List<StyleSheet> styles, [bool disableUnused = true]) {
     _include(styles);
 
-    final List<StyleSheetElement> elements = styles.map((s) => styleSheets[s.id]).toList();
+    final List<StyleSheetElement> elements = styles.map((s) => styleSheets[s]).toList();
 
     styleSheets.forEach((k, v) {
       final e = elements.firstWhere((e) => e.required.contains(k), orElse: () => null);

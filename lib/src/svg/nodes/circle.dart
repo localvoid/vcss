@@ -2,16 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library vcss.svg.path;
+library vcss.src.svg.nodes.circle;
 
 import 'dart:svg' as svg;
 import 'shape.dart';
 
-class SvgPath extends SvgShape {
-  final String d;
+class SvgCircle extends SvgShape {
+  final num cx;
+  final num cy;
+  final num r;
 
-  const SvgPath(
-      {this.d,
+  const SvgCircle(
+      {this.cx,
+       this.cy,
+       this.r,
        String transform,
        String color,
        String fill,
@@ -34,8 +38,14 @@ class SvgPath extends SvgShape {
 
   void setAttributes(svg.PathElement e) {
     super.setAttributes(e);
-    if (d != null) {
-      e.setAttribute('d', d);
+    if (cx != null) {
+      e.setAttribute('cx', cx.toString());
+    }
+    if (cy != null) {
+      e.setAttribute('cy', cy.toString());
+    }
+    if (r != null) {
+      e.setAttribute('r', r.toString());
     }
   }
 }
